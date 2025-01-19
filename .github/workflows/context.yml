@@ -1,0 +1,45 @@
+name: Scheduled Jobs
+
+on:
+  push:
+    branches:
+      - "main"
+
+permissions:
+  contents: write
+  pull-requests: write
+
+
+jobs:
+  make_pr:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: write file
+        run: |
+          cat <<EOF > test.txt
+          hello, world!
+          EOF
+
+      - name: add and commit
+        run: |
+          git checkout -b test
+          git add .
+          git config --global user.email "github-actions@github.com"
+          git config --global user.name "github-actions"
+          git commit -am "Test world"
+          git push --set-upstream origin test
+
+      - name: make pr
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: test
+          base: main
+          title: "[Auto] Extract Testing Updates"
+          body: |
+            This PR includes the following changes:
+            ```
+            $(git diff HEAD~1 HEAD || echo "No changes detected.")
+            ```
+        
