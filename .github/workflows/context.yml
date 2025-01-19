@@ -26,10 +26,10 @@ jobs:
 
       - name: add and commit
         run: |
-          git checkout -b test
-          git add .
           git config --global user.email "github-actions@github.com"
           git config --global user.name "github-actions"
+          git checkout -b test
+          git add .
           git commit -am "Test world"
           git push --set-upstream origin test
 
