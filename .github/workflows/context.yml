@@ -27,20 +27,25 @@ jobs:
           hello, world!
           EOF
 
-      - name: add and commit
+      - name: Commit changes
         run: |
-          git config --global user.email "github-actions@github.com"
-          git config --global user.name "github-actions"
-          git checkout -b test
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add .
-          git commit -am "Test world"
-          git push --set-upstream origin test
+          git commit -m "Commit message"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Push changes
+        run: git push --set-upstream origin testing
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: make pr
         uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          branch: test
+          branch: testing
           base: main
           title: "[Auto] Extract Testing Updates"
           body: |
