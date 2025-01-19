@@ -18,8 +18,7 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
         with:
-          repository: ${{ github.repository }}
-          token: ${{ secrets.GITHUB_TOKEN }}
+          ref: ${{ github.head_ref }}
     
       - name: write file
         run: |
@@ -27,17 +26,9 @@ jobs:
           hello, world!
           EOF
 
-      - name: Commit changes
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git fetch origin
-          git checkout -b test origin/test
-          git add .
-          git commit -m "Commit message"
-          git push origin test
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: Apply test.txt changes
       
       - name: make pr
         uses: peter-evans/create-pull-request@v7
