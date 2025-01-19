@@ -35,14 +35,10 @@ jobs:
           git checkout -b test origin/test
           git add .
           git commit -m "Commit message"
+          git push origin test
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
-      - name: Push changes
-        run: git push --set-upstream origin test
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: make pr
         uses: peter-evans/create-pull-request@v7
         with:
